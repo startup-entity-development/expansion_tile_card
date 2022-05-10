@@ -208,7 +208,7 @@ class ExpansionTileCardState extends State<ExpansionTileCard>
   late Animation<Color?> _materialColor;
   late Animation<EdgeInsets> _padding;
 
-  bool _isExpanded = false;
+  bool isExpanded = false;
 
   @override
   void initState() {
@@ -233,9 +233,9 @@ class ExpansionTileCardState extends State<ExpansionTileCard>
         Tween<double>(begin: widget.initialElevation, end: widget.elevation)
             .chain(_elevationTween));
     _padding = _controller.drive(_edgeInsetsTween.chain(_paddingTween));
-    _isExpanded = PageStorage.of(context)?.readState(context) as bool? ??
+    isExpanded = PageStorage.of(context)?.readState(context) as bool? ??
         widget.initiallyExpanded;
-    if (_isExpanded) _controller.value = 1.0;
+    if (isExpanded) _controller.value = 1.0;
   }
 
   @override
@@ -246,10 +246,10 @@ class ExpansionTileCardState extends State<ExpansionTileCard>
 
   // Credit: Simon Lightfoot - https://stackoverflow.com/a/48935106/955974
   void _setExpansion(bool shouldBeExpanded) {
-    if (shouldBeExpanded != _isExpanded) {
+    if (shouldBeExpanded != isExpanded) {
       setState(() {
-        _isExpanded = shouldBeExpanded;
-        if (_isExpanded) {
+        isExpanded = shouldBeExpanded;
+        if (isExpanded) {
           _controller.forward();
         } else {
           _controller.reverse().then<void>((void value) {
@@ -259,10 +259,10 @@ class ExpansionTileCardState extends State<ExpansionTileCard>
             });
           });
         }
-        PageStorage.of(context)?.writeState(context, _isExpanded);
+        PageStorage.of(context)?.writeState(context, isExpanded);
       });
       if (widget.onExpansionChanged != null)
-        widget.onExpansionChanged!(_isExpanded);
+        widget.onExpansionChanged!(isExpanded);
     }
   }
 
@@ -275,7 +275,7 @@ class ExpansionTileCardState extends State<ExpansionTileCard>
   }
 
   void toggleExpansion() {
-    _setExpansion(!_isExpanded);
+    _setExpansion(!isExpanded);
   }
 
   Widget _buildChildren(BuildContext context, Widget? child) {
@@ -346,7 +346,7 @@ class ExpansionTileCardState extends State<ExpansionTileCard>
 
   @override
   Widget build(BuildContext context) {
-    final bool closed = !_isExpanded && _controller.isDismissed;
+    final bool closed = !isExpanded && _controller.isDismissed;
     return AnimatedBuilder(
       animation: _controller.view,
       builder: _buildChildren,
